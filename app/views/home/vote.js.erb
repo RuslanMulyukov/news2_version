@@ -1,0 +1,12 @@
+<% if @error.present? %>
+  alert('Возникли проблемы при Вашем голосовании, попробуйте снова!');
+<% elsif @voted.present? %>
+  alert('Вы уже проголосовали за эту новость!');
+<% else %>
+  var id = "<%= params[:article_id] %>";
+  <% if @votes_for.present? %>
+    $('#' + id + ' .votes_for').text("<%= @votes_for %>");
+  <% elsif @votes_against.present? %>
+    $('#' + id + ' .votes_against').text("<%= @votes_against %>");
+  <% end %>
+<% end %>

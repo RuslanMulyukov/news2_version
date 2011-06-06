@@ -1,0 +1,1954 @@
+  [1m[36mSQL (0.6ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.1ms)[0m  select sqlite_version(*)
+  [1m[36mSQL (7.9ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL) [0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("schema_migrations")
+  [1m[36mSQL (2.0ms)[0m  [1mCREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")[0m
+  [1m[35mSQL (0.2ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.2ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.1ms)[0m  SELECT "schema_migrations"."version" FROM "schema_migrations"
+Migrating to DeviseCreateUsers (20110527175143)
+  [1m[36mSQL (0.7ms)[0m  [1mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "sex" varchar(255), "birthday" date, "email" varchar(255) DEFAULT '' NOT NULL, "encrypted_password" varchar(128) DEFAULT '' NOT NULL, "reset_password_token" varchar(255), "remember_created_at" datetime, "sign_in_count" integer DEFAULT 0, "current_sign_in_at" datetime, "last_sign_in_at" datetime, "current_sign_in_ip" varchar(255), "last_sign_in_ip" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("users")
+  [1m[36mSQL (0.3ms)[0m  [1mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("users")
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_info('index_users_on_email')[0m
+  [1m[35mSQL (0.2ms)[0m  CREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20110527175143')[0m
+Migrating to CreateCategories (20110527175554)
+  [1m[35mSQL (0.5ms)[0m  CREATE TABLE "categories" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "title" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20110527175554')[0m
+Migrating to CreateVotes (20110527175629)
+  [1m[35mSQL (0.5ms)[0m  CREATE TABLE "votes" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "new_id" integer, "result" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20110527175629')[0m
+Migrating to CreateComments (20110527175706)
+  [1m[35mSQL (0.5ms)[0m  CREATE TABLE "comments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "new_id" integer, "description" text, "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20110527175706')[0m
+Migrating to AddLoginToUsers (20110527191952)
+  [1m[35mSQL (0.6ms)[0m  ALTER TABLE "users" ADD "login" varchar(255)
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20110527191952')[0m
+Migrating to CreateUserChildren (20110528175358)
+  [1m[35mSQL (0.5ms)[0m  CREATE TABLE "user_children" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20110528175358')[0m
+Migrating to CreateUsersChildren (20110528175422)
+  [1m[35mSQL (0.6ms)[0m  CREATE TABLE "users_children" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20110528175422')[0m
+Migrating to CreateArticles (20110528184458)
+  [1m[35mSQL (0.5ms)[0m  CREATE TABLE "articles" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "category_id" integer, "title" varchar(255), "description" text, "source" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20110528184458')[0m
+Migrating to RenameNewIdToArticleIdInVotesAndComments (20110528184857)
+  [1m[35mSQL (0.6ms)[0m  CREATE TEMPORARY TABLE "altered_votes" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "article_id" integer, "result" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("votes")[0m
+  [1m[35mSQL (0.3ms)[0m  DROP TABLE "votes"
+  [1m[36mSQL (0.3ms)[0m  [1mCREATE TABLE "votes" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "article_id" integer, "result" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("altered_votes")
+  [1m[36mSQL (0.3ms)[0m  [1mDROP TABLE "altered_votes"[0m
+  [1m[35mSQL (0.3ms)[0m  CREATE TEMPORARY TABLE "altered_comments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "article_id" integer, "description" text, "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("comments")[0m
+  [1m[35mSQL (0.3ms)[0m  DROP TABLE "comments"
+  [1m[36mSQL (0.3ms)[0m  [1mCREATE TABLE "comments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "article_id" integer, "description" text, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("altered_comments")
+  [1m[36mSQL (0.2ms)[0m  [1mDROP TABLE "altered_comments"[0m
+  [1m[35mSQL (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20110528184857')
+Migrating to AddAvatarColumnsToUser (20110529190019)
+  [1m[36mSQL (0.6ms)[0m  [1mALTER TABLE "users" ADD "avatar_file_name" varchar(255)[0m
+  [1m[35mSQL (0.4ms)[0m  ALTER TABLE "users" ADD "avatar_content_type" varchar(255)
+  [1m[36mSQL (0.4ms)[0m  [1mALTER TABLE "users" ADD "avatar_file_size" integer[0m
+  [1m[35mSQL (0.5ms)[0m  ALTER TABLE "users" ADD "avatar_updated_at" datetime
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20110529190019')[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+  [1m[35mSQL (0.3ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("articles")[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("categories")
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("comments")[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("user_children")
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("users")[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_info('index_users_on_reset_password_token')
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_info('index_users_on_email')[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("users_children")
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("votes")[0m
+
+
+Started GET "/" for 127.0.0.1 at Mon Jun 06 14:23:47 +0400 2011
+  Processing by HomeController#index as HTML
+Completed   in 1ms
+
+
+Started GET "/users/sign_in" for 127.0.0.1 at Mon Jun 06 14:23:47 +0400 2011
+  Processing by Devise::SessionsController#new as HTML
+Rendered devise/shared/_links.erb (2.6ms)
+Rendered devise/sessions/new.html.erb within layouts/application (17.3ms)
+Completed 200 OK in 82ms (Views: 28.6ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/users/sign_in" for 127.0.0.1 at Mon Jun 06 14:23:57 +0400 2011
+  Processing by Devise::SessionsController#create as HTML
+  Parameters: {"commit"=>"Sign in", "authenticity_token"=>"L1xaRID2HFV7ra/iN4hdMmFKR9nKxXSJdx1Ye5FgkUM=", "utf8"=>"✓", "user"=>{"remember_me"=>"0", "login"=>"tancor", "password"=>"[FILTERED]"}}
+  [1m[36mSQL (0.9ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."login" = 'tancor' LIMIT 1
+Completed   in 68ms
+  Processing by Devise::SessionsController#new as HTML
+  Parameters: {"commit"=>"Sign in", "authenticity_token"=>"L1xaRID2HFV7ra/iN4hdMmFKR9nKxXSJdx1Ye5FgkUM=", "utf8"=>"✓", "user"=>{"remember_me"=>"0", "login"=>"tancor", "password"=>"[FILTERED]"}}
+Rendered devise/shared/_links.erb (2.5ms)
+Rendered devise/sessions/new.html.erb within layouts/application (16.6ms)
+Completed 200 OK in 194ms (Views: 27.1ms | ActiveRecord: 1.4ms)
+
+
+Started GET "/users/sign_up" for 127.0.0.1 at Mon Jun 06 14:24:05 +0400 2011
+  Processing by Devise::RegistrationsController#new as HTML
+Rendered devise/shared/_links.erb (2.7ms)
+Rendered devise/registrations/new.html.erb within layouts/application (524.5ms)
+Completed 200 OK in 642ms (Views: 535.9ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/validators/uniqueness.json?case_sensitive=true&user%5Blogin%5D=nikola" for 127.0.0.1 at Mon Jun 06 14:24:33 +0400 2011
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users"."id" FROM "users" WHERE "users"."login" = 'nikola' LIMIT 1[0m
+
+
+Started GET "/validators/uniqueness.json?case_sensitive=true&scope=&user%5Bemail%5D=Ret85%40mail.ru" for 127.0.0.1 at Mon Jun 06 14:24:47 +0400 2011
+  [1m[35mUser Load (0.2ms)[0m  SELECT "users"."id" FROM "users" WHERE "users"."email" = 'Ret85@mail.ru' LIMIT 1
+
+
+Started POST "/users" for 127.0.0.1 at Mon Jun 06 14:24:56 +0400 2011
+  Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"commit"=>"Sign up", "authenticity_token"=>"L1xaRID2HFV7ra/iN4hdMmFKR9nKxXSJdx1Ye5FgkUM=", "utf8"=>"✓", "user"=>{"name"=>"Ruslan", "password_confirmation"=>"[FILTERED]", "avatar"=>"", "sex"=>"man", "login"=>"nikola", "password"=>"[FILTERED]", "email"=>"Ret85@mail.ru"}}
+WARNING: Can't mass-assign protected attributes: avatar
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users"."id" FROM "users" WHERE ("users"."email" = 'Ret85@mail.ru') LIMIT 1[0m
+  [1m[35mUser Load (0.1ms)[0m  SELECT "users"."id" FROM "users" WHERE ("users"."login" = 'nikola') LIMIT 1
+  [1m[36mAREL (0.6ms)[0m  [1mINSERT INTO "users" ("reset_password_token", "name", "birthday", "avatar_content_type", "sign_in_count", "last_sign_in_at", "avatar_file_size", "avatar_updated_at", "current_sign_in_at", "login", "sex", "updated_at", "remember_created_at", "last_sign_in_ip", "avatar_file_name", "encrypted_password", "created_at", "current_sign_in_ip", "email") VALUES (NULL, 'Ruslan', NULL, NULL, 0, NULL, NULL, NULL, NULL, 'nikola', 'man', '2011-06-06 10:24:56.528612', NULL, NULL, NULL, '$2a$10$cqP6g8Ovba6HW./arTbiB.SsLxaV1WnnoeOzENu7BACmYpfh5JGdm', '2011-06-06 10:24:56.528612', NULL, 'ret85@mail.ru')[0m
+[paperclip] Saving attachments.
+  [1m[35mAREL (0.4ms)[0m  UPDATE "users" SET "sign_in_count" = 1, "last_sign_in_at" = '2011-06-06 10:24:56.544721', "current_sign_in_at" = '2011-06-06 10:24:56.544721', "updated_at" = '2011-06-06 10:24:56.546557', "last_sign_in_ip" = '127.0.0.1', "current_sign_in_ip" = '127.0.0.1' WHERE "users"."id" = 1
+[paperclip] Saving attachments.
+Redirected to http://localhost:3000/
+Completed 302 Found in 239ms
+
+
+Started GET "/" for 127.0.0.1 at Mon Jun 06 14:24:56 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+  [1m[35mArticle Load (0.3ms)[0m  SELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0
+Rendered collection (0.0ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+Rendered home/index.html.erb within layouts/application (33.9ms)
+Completed 200 OK in 223ms (Views: 43.5ms | ActiveRecord: 1.2ms)
+
+
+Started GET "/users/1/categories/new" for 127.0.0.1 at Mon Jun 06 14:25:01 +0400 2011
+  Processing by CategoriesController#new as HTML
+  Parameters: {"user_id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mCategory Load (0.3ms)[0m  [1mSELECT "categories".* FROM "categories"[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "categories".* FROM "categories"
+Rendered categories/_form.html.erb (5.6ms)
+Rendered categories/new.html.erb within layouts/application (19.0ms)
+Completed 200 OK in 192ms (Views: 29.8ms | ActiveRecord: 0.6ms)
+
+
+Started POST "/users/1/categories" for 127.0.0.1 at Mon Jun 06 14:25:35 +0400 2011
+  Processing by CategoriesController#create as HTML
+  Parameters: {"commit"=>"Create Category", "category"=>{"title"=>"Sport"}, "authenticity_token"=>"L1xaRID2HFV7ra/iN4hdMmFKR9nKxXSJdx1Ye5FgkUM=", "utf8"=>"✓", "user_id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT "categories"."id" FROM "categories" WHERE ("categories"."title" = 'Sport') LIMIT 1
+  [1m[36mAREL (0.3ms)[0m  [1mINSERT INTO "categories" ("updated_at", "created_at", "title", "user_id") VALUES ('2011-06-06 10:25:36.001670', '2011-06-06 10:25:36.001670', 'Sport', 1)[0m
+Redirected to http://localhost:3000/users/1/articles/new?category_id=1
+Completed 302 Found in 190ms
+
+
+Started GET "/users/1/articles/new?category_id=1" for 127.0.0.1 at Mon Jun 06 14:25:36 +0400 2011
+  Processing by ArticlesController#new as HTML
+  Parameters: {"category_id"=>"1", "user_id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mCategory Load (0.3ms)[0m  [1mSELECT "categories".* FROM "categories"[0m
+  [1m[35mCategory Load (0.3ms)[0m  SELECT "categories".* FROM "categories" WHERE ("categories".user_id = 1)
+Rendered articles/_form.html.erb (31.0ms)
+Rendered articles/new.html.erb within layouts/application (58.5ms)
+Completed 200 OK in 242ms (Views: 68.9ms | ActiveRecord: 1.1ms)
+
+
+Started POST "/users/1/articles" for 127.0.0.1 at Mon Jun 06 14:26:30 +0400 2011
+  Processing by ArticlesController#create as HTML
+  Parameters: {"article"=>{"title"=>"Hockey", "category_id"=>"1", "description"=>"<p><em>cv nvb mbn,mn zbgzfgbartntrngn ggfb </em></p>", "source"=>"www.google.com"}, "commit"=>"Create Article", "authenticity_token"=>"L1xaRID2HFV7ra/iN4hdMmFKR9nKxXSJdx1Ye5FgkUM=", "utf8"=>"✓", "user_id"=>"1"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mArticle Load (0.2ms)[0m  SELECT "articles"."id" FROM "articles" WHERE ("articles"."title" = 'Hockey') LIMIT 1
+  [1m[36mAREL (0.4ms)[0m  [1mINSERT INTO "articles" ("user_id", "title", "source", "created_at", "description", "category_id", "updated_at") VALUES (1, 'Hockey', 'www.google.com', '2011-06-06 10:26:30.421557', '<p><em>cv nvb mbn,mn zbgzfgbartntrngn ggfb </em></p>', 1, '2011-06-06 10:26:30.421557')[0m
+Redirected to http://localhost:3000/users/1/articles/1
+Completed 302 Found in 183ms
+
+
+Started GET "/users/1/articles/1" for 127.0.0.1 at Mon Jun 06 14:26:30 +0400 2011
+  Processing by ArticlesController#show as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mArticle Load (0.3ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mCategory Load (0.3ms)[0m  SELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+  [1m[35mComment Load (0.2ms)[0m  SELECT "comments".* FROM "comments" WHERE ("comments".article_id = 1)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+Rendered articles/show.html.erb within layouts/application (176.5ms)
+Completed 200 OK in 267ms (Views: 186.4ms | ActiveRecord: 1.5ms)
+
+
+Started POST "/users/1/comments" for 127.0.0.1 at Mon Jun 06 14:26:37 +0400 2011
+  Processing by CommentsController#create as 
+  Parameters: {"article_id"=>"1", "user_id"=>"1", "description"=>"vc b,dhj.fjk/lk/.hgnREHEtrnhrtn"}
+  [1m[35mUser Load (97.8ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mAREL (0.4ms)[0m  INSERT INTO "comments" ("updated_at", "created_at", "description", "user_id", "article_id") VALUES ('2011-06-06 10:26:37.865715', '2011-06-06 10:26:37.865715', 'vc b,dhj.fjk/lk/.hgnREHEtrnhrtn', 1, 1)
+  [1m[36mComment Load (0.4ms)[0m  [1mSELECT "comments".* FROM "comments" WHERE ("comments".article_id = 1)[0m
+  [1m[35mUser Load (0.5ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered comments/_comment.html.erb (7.5ms)
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered comments/create.js.erb (14.5ms)
+Completed 200 OK in 299ms (Views: 65.0ms | ActiveRecord: 99.7ms)
+
+
+Started GET "/users/1/articles" for 127.0.0.1 at Mon Jun 06 14:26:46 +0400 2011
+
+AbstractController::ActionNotFound (The action 'index' could not be found for ArticlesController):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/unknown_action.erb within rescues/layout (1.0ms)
+
+
+Started GET "/" for 127.0.0.1 at Mon Jun 06 14:26:53 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+  [1m[35mArticle Load (0.4ms)[0m  SELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+Rendered articles/_article.html.erb (49.5ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+Rendered home/index.html.erb within layouts/application (163.8ms)
+Completed 200 OK in 252ms (Views: 172.5ms | ActiveRecord: 2.1ms)
+
+
+Started POST "/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:27:03 +0400 2011
+  Processing by VotesController#create as 
+  Parameters: {"result"=>"against", "article_id"=>"1", "user_id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."article_id" = 1 AND ("votes".user_id = 1)
+  [1m[36mAREL (0.4ms)[0m  [1mINSERT INTO "votes" ("user_id", "article_id", "updated_at", "result", "created_at") VALUES (1, 1, '2011-06-06 10:27:03.673293', 'against', '2011-06-06 10:27:03.673293')[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND "votes"."article_id" = 1 AND ("votes".article_id = 1)
+Rendered votes/create.js.erb (1.1ms)
+Completed 200 OK in 276ms (Views: 47.0ms | ActiveRecord: 1.7ms)
+
+
+Started POST "/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:27:05 +0400 2011
+  Processing by VotesController#create as 
+  Parameters: {"result"=>"for", "article_id"=>"1", "user_id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mArticle Load (0.3ms)[0m  SELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."article_id" = 1 AND ("votes".user_id = 1)[0m
+Rendered votes/create.js.erb (0.9ms)
+Completed 200 OK in 247ms (Views: 44.4ms | ActiveRecord: 0.9ms)
+
+
+Started POST "/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:27:07 +0400 2011
+  Processing by VotesController#create as 
+  Parameters: {"result"=>"against", "article_id"=>"1", "user_id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mArticle Load (0.3ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."article_id" = 1 AND ("votes".user_id = 1)
+Rendered votes/create.js.erb (0.9ms)
+Completed 200 OK in 241ms (Views: 44.8ms | ActiveRecord: 0.9ms)
+
+
+Started GET "/" for 127.0.0.1 at Mon Jun 06 14:27:11 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (56.8ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (92.1ms)
+Completed 200 OK in 271ms (Views: 101.1ms | ActiveRecord: 1.9ms)
+
+
+Started GET "/" for 127.0.0.1 at Mon Jun 06 14:27:14 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (134.8ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (169.7ms)
+Completed 200 OK in 258ms (Views: 178.3ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/users/1" for 127.0.0.1 at Mon Jun 06 14:27:15 +0400 2011
+  Processing by UsersController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered users/show.html.erb within layouts/application (11.4ms)
+Completed 200 OK in 155ms (Views: 22.2ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:27:15 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.4ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:27:15 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started GET "/" for 127.0.0.1 at Mon Jun 06 14:27:16 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (60.4ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (96.6ms)
+Completed 200 OK in 305ms (Views: 105.6ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/users/1" for 127.0.0.1 at Mon Jun 06 14:27:18 +0400 2011
+  Processing by UsersController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered users/show.html.erb within layouts/application (11.5ms)
+Completed 200 OK in 172ms (Views: 22.0ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:27:18 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (3.0ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:27:18 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started GET "/users/1/edit" for 127.0.0.1 at Mon Jun 06 14:27:21 +0400 2011
+  Processing by UsersController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered users/_form.html.erb (15.6ms)
+Rendered users/edit.html.erb within layouts/application (27.7ms)
+Completed 200 OK in 211ms (Views: 38.6ms | ActiveRecord: 0.4ms)
+
+
+Started POST "/users/1" for 127.0.0.1 at Mon Jun 06 14:27:32 +0400 2011
+  Processing by UsersController#update as HTML
+  Parameters: {"commit"=>"Update User", "authenticity_token"=>"L1xaRID2HFV7ra/iN4hdMmFKR9nKxXSJdx1Ye5FgkUM=", "utf8"=>"✓", "id"=>"1", "user"=>{"name"=>"Ruslan", "birthday(1i)"=>"1985", "birthday(2i)"=>"7", "birthday(3i)"=>"11", "sex"=>"man"}}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users"."id" FROM "users" WHERE ("users"."email" = 'ret85@mail.ru') AND ("users".id <> 1) LIMIT 1[0m
+  [1m[35mUser Load (0.1ms)[0m  SELECT "users"."id" FROM "users" WHERE ("users"."login" = 'nikola') AND ("users".id <> 1) LIMIT 1
+  [1m[36mAREL (0.4ms)[0m  [1mUPDATE "users" SET "birthday" = '1985-07-11', "updated_at" = '2011-06-06 10:27:32.986562' WHERE "users"."id" = 1[0m
+[paperclip] Saving attachments.
+Redirected to http://localhost:3000/users/1
+Completed 302 Found in 152ms
+
+
+Started GET "/users/1" for 127.0.0.1 at Mon Jun 06 14:27:33 +0400 2011
+  Processing by UsersController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[35mUser Load (0.5ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+Rendered users/show.html.erb within layouts/application (11.0ms)
+Completed 200 OK in 82ms (Views: 21.3ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:27:33 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:27:33 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started GET "/users" for 127.0.0.1 at Mon Jun 06 14:27:36 +0400 2011
+
+AbstractController::ActionNotFound (The action 'index' could not be found for UsersController):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/unknown_action.erb within rescues/layout (0.9ms)
+
+
+Started GET "/users" for 127.0.0.1 at Mon Jun 06 14:27:45 +0400 2011
+
+AbstractController::ActionNotFound (The action 'index' could not be found for UsersController):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/unknown_action.erb within rescues/layout (0.9ms)
+
+
+Started GET "/users/1/edit" for 127.0.0.1 at Mon Jun 06 14:28:02 +0400 2011
+  Processing by UsersController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+Rendered users/_form.html.erb (13.8ms)
+Rendered users/edit.html.erb within layouts/application (100.5ms)
+Completed 200 OK in 170ms (Views: 110.8ms | ActiveRecord: 0.4ms)
+
+
+Started POST "/users/1" for 127.0.0.1 at Mon Jun 06 14:28:04 +0400 2011
+  Processing by UsersController#update as HTML
+  Parameters: {"commit"=>"Update User", "authenticity_token"=>"L1xaRID2HFV7ra/iN4hdMmFKR9nKxXSJdx1Ye5FgkUM=", "utf8"=>"✓", "id"=>"1", "user"=>{"name"=>"Ruslan", "birthday(1i)"=>"1985", "birthday(2i)"=>"7", "birthday(3i)"=>"11", "sex"=>"man"}}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mUser Load (0.3ms)[0m  SELECT "users"."id" FROM "users" WHERE ("users"."email" = 'ret85@mail.ru') AND ("users".id <> 1) LIMIT 1
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT "users"."id" FROM "users" WHERE ("users"."login" = 'nikola') AND ("users".id <> 1) LIMIT 1[0m
+[paperclip] Saving attachments.
+Redirected to http://localhost:3000/users/1
+Completed 302 Found in 77ms
+
+
+Started GET "/users/1" for 127.0.0.1 at Mon Jun 06 14:28:04 +0400 2011
+  Processing by UsersController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+Rendered users/show.html.erb within layouts/application (12.3ms)
+Completed 200 OK in 193ms (Views: 23.4ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:28:04 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.3ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:28:04 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started GET "/" for 127.0.0.1 at Mon Jun 06 14:28:06 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+  [1m[35mArticle Load (0.4ms)[0m  SELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+Rendered articles/_article.html.erb (58.2ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+Rendered home/index.html.erb within layouts/application (165.2ms)
+Completed 200 OK in 348ms (Views: 174.1ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/users/1" for 127.0.0.1 at Mon Jun 06 14:28:09 +0400 2011
+  Processing by UsersController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[35mUser Load (0.5ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+Rendered users/show.html.erb within layouts/application (11.3ms)
+Completed 200 OK in 81ms (Views: 21.8ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:28:09 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.3ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:28:09 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.1ms)
+
+
+Started GET "/" for 127.0.0.1 at Mon Jun 06 14:28:10 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[35mUser Load (0.5ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+  [1m[35mArticle Load (0.4ms)[0m  SELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+Rendered articles/_article.html.erb (132.1ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+Rendered home/index.html.erb within layouts/application (168.0ms)
+Completed 200 OK in 263ms (Views: 177.0ms | ActiveRecord: 2.1ms)
+
+
+Started GET "/users/1" for 127.0.0.1 at Mon Jun 06 14:29:42 +0400 2011
+  Processing by UsersController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+Rendered users/show.html.erb within layouts/application (12.0ms)
+Completed 200 OK in 155ms (Views: 23.4ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:29:42 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.4ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:29:42 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started GET "/users" for 127.0.0.1 at Mon Jun 06 14:29:44 +0400 2011
+
+AbstractController::ActionNotFound (The action 'index' could not be found for UsersController):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/unknown_action.erb within rescues/layout (0.8ms)
+
+
+Started GET "/" for 127.0.0.1 at Mon Jun 06 14:34:07 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mSQL (1.2ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+  [1m[35mArticle Load (0.5ms)[0m  SELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+Rendered articles/_article.html.erb (85.3ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+Rendered home/index.html.erb within layouts/application (233.1ms)
+Completed 200 OK in 338ms (Views: 242.1ms | ActiveRecord: 3.4ms)
+
+
+Started POST "/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:34:16 +0400 2011
+  Processing by VotesController#create as 
+  Parameters: {"result"=>"against", "article_id"=>"1", "user_id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mArticle Load (0.3ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."article_id" = 1 AND ("votes".user_id = 1)
+Rendered votes/create.js.erb (0.9ms)
+Completed 200 OK in 225ms (Views: 50.0ms | ActiveRecord: 1.0ms)
+
+
+Started POST "/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:34:18 +0400 2011
+  Processing by VotesController#create as 
+  Parameters: {"result"=>"for", "article_id"=>"1", "user_id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mArticle Load (0.3ms)[0m  SELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."article_id" = 1 AND ("votes".user_id = 1)[0m
+Rendered votes/create.js.erb (1.0ms)
+Completed 200 OK in 223ms (Views: 48.4ms | ActiveRecord: 1.0ms)
+
+
+Started GET "/users/1/articles/1" for 127.0.0.1 at Mon Jun 06 14:34:20 +0400 2011
+  Processing by ArticlesController#show as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mCategory Load (0.3ms)[0m  SELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+  [1m[35mComment Load (0.3ms)[0m  SELECT "comments".* FROM "comments" WHERE ("comments".article_id = 1)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered articles/show.html.erb within layouts/application (181.3ms)
+Completed 200 OK in 386ms (Views: 205.2ms | ActiveRecord: 1.6ms)
+
+
+Started GET "/" for 127.0.0.1 at Mon Jun 06 14:34:26 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (57.2ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (93.4ms)
+Completed 200 OK in 263ms (Views: 102.1ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/users/1" for 127.0.0.1 at Mon Jun 06 14:34:29 +0400 2011
+  Processing by UsersController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered users/show.html.erb within layouts/application (10.9ms)
+Completed 200 OK in 79ms (Views: 21.4ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:34:29 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.3ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:34:29 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started GET "/home/index" for 127.0.0.1 at Mon Jun 06 14:34:32 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (127.6ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (163.2ms)
+Completed 200 OK in 360ms (Views: 172.3ms | ActiveRecord: 2.1ms)
+
+
+Started GET "/users/1/edit" for 127.0.0.1 at Mon Jun 06 14:34:36 +0400 2011
+  Processing by UsersController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered users/_form.html.erb (99.3ms)
+Rendered users/edit.html.erb within layouts/application (111.3ms)
+Completed 200 OK in 191ms (Views: 133.8ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/users" for 127.0.0.1 at Mon Jun 06 14:34:40 +0400 2011
+
+AbstractController::ActionNotFound (The action 'index' could not be found for UsersController):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/unknown_action.erb within rescues/layout (0.9ms)
+
+
+Started POST "/users/1" for 127.0.0.1 at Mon Jun 06 14:34:49 +0400 2011
+  Processing by UsersController#update as HTML
+  Parameters: {"commit"=>"Update User", "authenticity_token"=>"L1xaRID2HFV7ra/iN4hdMmFKR9nKxXSJdx1Ye5FgkUM=", "utf8"=>"✓", "id"=>"1", "user"=>{"name"=>"Ruslan", "birthday(1i)"=>"1985", "birthday(2i)"=>"7", "birthday(3i)"=>"11", "sex"=>"man"}}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users"."id" FROM "users" WHERE ("users"."email" = 'ret85@mail.ru') AND ("users".id <> 1) LIMIT 1[0m
+  [1m[35mUser Load (0.2ms)[0m  SELECT "users"."id" FROM "users" WHERE ("users"."login" = 'nikola') AND ("users".id <> 1) LIMIT 1
+[paperclip] Saving attachments.
+Redirected to http://localhost:3000/users/1
+Completed 302 Found in 71ms
+
+
+Started GET "/users/1" for 127.0.0.1 at Mon Jun 06 14:34:49 +0400 2011
+  Processing by UsersController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered users/show.html.erb within layouts/application (11.8ms)
+Completed 200 OK in 86ms (Views: 22.5ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:34:50 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:34:50 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.1ms)
+
+
+Started GET "/home/index" for 127.0.0.1 at Mon Jun 06 14:34:53 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (127.9ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (164.0ms)
+Completed 200 OK in 326ms (Views: 172.6ms | ActiveRecord: 2.1ms)
+
+
+Started GET "/users/1" for 127.0.0.1 at Mon Jun 06 14:34:57 +0400 2011
+  Processing by UsersController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered users/show.html.erb within layouts/application (11.0ms)
+Completed 200 OK in 78ms (Views: 21.7ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:34:58 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.3ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:34:58 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.3ms)
+
+
+Started GET "/home/index" for 127.0.0.1 at Mon Jun 06 14:35:00 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (145.5ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (181.4ms)
+Completed 200 OK in 267ms (Views: 190.0ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/users/1/edit" for 127.0.0.1 at Mon Jun 06 14:35:02 +0400 2011
+  Processing by UsersController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered users/_form.html.erb (14.8ms)
+Rendered users/edit.html.erb within layouts/application (26.4ms)
+Completed 200 OK in 172ms (Views: 36.9ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/users" for 127.0.0.1 at Mon Jun 06 14:35:05 +0400 2011
+
+AbstractController::ActionNotFound (The action 'index' could not be found for UsersController):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/unknown_action.erb within rescues/layout (0.8ms)
+
+
+Started GET "/users/1/edit" for 127.0.0.1 at Mon Jun 06 14:35:41 +0400 2011
+  Processing by UsersController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered users/_form.html.erb (15.6ms)
+Rendered users/edit.html.erb within layouts/application (27.4ms)
+Completed 200 OK in 207ms (Views: 38.1ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/" for 127.0.0.1 at Mon Jun 06 14:35:43 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (57.8ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (93.9ms)
+Completed 200 OK in 252ms (Views: 102.7ms | ActiveRecord: 2.1ms)
+
+
+Started GET "/users/1/edit" for 127.0.0.1 at Mon Jun 06 14:35:44 +0400 2011
+  Processing by UsersController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered users/_form.html.erb (14.4ms)
+Rendered users/edit.html.erb within layouts/application (25.6ms)
+Completed 200 OK in 172ms (Views: 35.9ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/home/index" for 127.0.0.1 at Mon Jun 06 14:35:46 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (56.6ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (91.3ms)
+Completed 200 OK in 269ms (Views: 100.1ms | ActiveRecord: 1.9ms)
+
+
+Started GET "/users/1" for 127.0.0.1 at Mon Jun 06 14:35:50 +0400 2011
+  Processing by UsersController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered users/show.html.erb within layouts/application (10.9ms)
+Completed 200 OK in 81ms (Views: 21.2ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:35:51 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.3ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:35:51 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started GET "/home/index" for 127.0.0.1 at Mon Jun 06 14:35:53 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (135.4ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (172.8ms)
+Completed 200 OK in 262ms (Views: 181.6ms | ActiveRecord: 2.2ms)
+
+
+Started GET "/users/1" for 127.0.0.1 at Mon Jun 06 14:35:56 +0400 2011
+  Processing by UsersController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered users/show.html.erb within layouts/application (12.1ms)
+Completed 200 OK in 155ms (Views: 23.7ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:35:56 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.3ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Mon Jun 06 14:35:56 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started GET "/home/index" for 127.0.0.1 at Mon Jun 06 14:35:58 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (61.8ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (99.8ms)
+Completed 200 OK in 299ms (Views: 219.4ms | ActiveRecord: 2.2ms)
+
+
+Started GET "/" for 127.0.0.1 at Mon Jun 06 14:36:02 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (58.5ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (169.9ms)
+Completed 200 OK in 335ms (Views: 179.0ms | ActiveRecord: 2.2ms)
+
+
+Started GET "/users/1/articles/1" for 127.0.0.1 at Mon Jun 06 14:36:05 +0400 2011
+  Processing by ArticlesController#show as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mArticle Load (0.3ms)[0m  SELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1
+  [1m[36mCategory Load (0.3ms)[0m  [1mSELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+  [1m[36mComment Load (0.2ms)[0m  [1mSELECT "comments".* FROM "comments" WHERE ("comments".article_id = 1)[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+Rendered articles/show.html.erb within layouts/application (191.5ms)
+Completed 200 OK in 280ms (Views: 201.1ms | ActiveRecord: 1.6ms)
+
+
+Started GET "/users/1/articles" for 127.0.0.1 at Mon Jun 06 14:36:07 +0400 2011
+
+AbstractController::ActionNotFound (The action 'index' could not be found for ArticlesController):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/unknown_action.erb within rescues/layout (0.9ms)
+
+
+Started GET "/users/1/articles/1" for 127.0.0.1 at Mon Jun 06 14:38:10 +0400 2011
+  Processing by ArticlesController#show as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[36mSQL (1.2ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mUser Load (0.5ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mArticle Load (0.3ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mCategory Load (0.4ms)[0m  SELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+  [1m[35mComment Load (0.2ms)[0m  SELECT "comments".* FROM "comments" WHERE ("comments".article_id = 1)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered articles/show.html.erb within layouts/application (192.7ms)
+Completed 200 OK in 289ms (Views: 202.5ms | ActiveRecord: 2.9ms)
+
+
+Started GET "/users/1/articles/1/edit" for 127.0.0.1 at Mon Jun 06 14:38:14 +0400 2011
+  Processing by ArticlesController#edit as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mArticle Load (0.3ms)[0m  SELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 AND ("articles".user_id = 1) LIMIT 1
+  [1m[36mCategory Load (0.3ms)[0m  [1mSELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1[0m
+  [1m[35mCategory Load (0.3ms)[0m  SELECT "categories".* FROM "categories" WHERE ("categories".user_id = 1)
+Rendered articles/_form.html.erb (28.2ms)
+Rendered articles/edit.html.erb within layouts/application (42.4ms)
+Completed 200 OK in 249ms (Views: 68.7ms | ActiveRecord: 1.3ms)
+
+
+Started GET "/" for 127.0.0.1 at Mon Jun 06 14:38:18 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (118.7ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (166.2ms)
+Completed 200 OK in 324ms (Views: 175.5ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/users/1/articles/1" for 127.0.0.1 at Mon Jun 06 14:38:20 +0400 2011
+  Processing by ArticlesController#show as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mArticle Load (0.4ms)[0m  SELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1
+  [1m[36mCategory Load (0.3ms)[0m  [1mSELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+  [1m[36mComment Load (0.3ms)[0m  [1mSELECT "comments".* FROM "comments" WHERE ("comments".article_id = 1)[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+Rendered articles/show.html.erb within layouts/application (165.6ms)
+Completed 200 OK in 331ms (Views: 175.7ms | ActiveRecord: 1.5ms)
+
+
+Started GET "/users/1/articles" for 127.0.0.1 at Mon Jun 06 14:38:22 +0400 2011
+
+AbstractController::ActionNotFound (The action 'index' could not be found for ArticlesController):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/unknown_action.erb within rescues/layout (0.9ms)
+
+
+Started GET "/users/1/articles/1" for 127.0.0.1 at Mon Jun 06 14:39:07 +0400 2011
+  Processing by ArticlesController#show as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mArticle Load (0.3ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mCategory Load (0.3ms)[0m  SELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+  [1m[35mComment Load (0.3ms)[0m  SELECT "comments".* FROM "comments" WHERE ("comments".article_id = 1)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered articles/show.html.erb within layouts/application (167.5ms)
+Completed 200 OK in 418ms (Views: 178.0ms | ActiveRecord: 1.6ms)
+
+
+Started GET "/home/index" for 127.0.0.1 at Mon Jun 06 14:39:09 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (57.0ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (92.1ms)
+Completed 200 OK in 247ms (Views: 100.9ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/home/index" for 127.0.0.1 at Mon Jun 06 14:39:13 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (128.8ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (164.1ms)
+Completed 200 OK in 325ms (Views: 173.0ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/users/1/articles/1/edit" for 127.0.0.1 at Mon Jun 06 14:39:35 +0400 2011
+  Processing by ArticlesController#edit as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mArticle Load (0.4ms)[0m  SELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 AND ("articles".user_id = 1) LIMIT 1
+  [1m[36mCategory Load (0.3ms)[0m  [1mSELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1[0m
+  [1m[35mCategory Load (0.4ms)[0m  SELECT "categories".* FROM "categories" WHERE ("categories".user_id = 1)
+Rendered articles/_form.html.erb (27.4ms)
+Rendered articles/edit.html.erb within layouts/application (40.3ms)
+Completed 200 OK in 257ms (Views: 50.6ms | ActiveRecord: 1.5ms)
+
+
+Started GET "/users/1/articles" for 127.0.0.1 at Mon Jun 06 14:39:38 +0400 2011
+
+AbstractController::ActionNotFound (The action 'index' could not be found for ArticlesController):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/unknown_action.erb within rescues/layout (0.9ms)
+
+
+Started GET "/users/1/articles" for 127.0.0.1 at Mon Jun 06 14:39:44 +0400 2011
+
+AbstractController::ActionNotFound (The action 'index' could not be found for ArticlesController):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/unknown_action.erb within rescues/layout (0.9ms)
+
+
+Started GET "/users/1/articles/1/edit" for 127.0.0.1 at Mon Jun 06 14:40:16 +0400 2011
+  Processing by ArticlesController#edit as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mArticle Load (0.3ms)[0m  SELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 AND ("articles".user_id = 1) LIMIT 1
+  [1m[36mCategory Load (0.4ms)[0m  [1mSELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1[0m
+  [1m[35mCategory Load (0.3ms)[0m  SELECT "categories".* FROM "categories" WHERE ("categories".user_id = 1)
+Rendered articles/_form.html.erb (27.9ms)
+Rendered articles/edit.html.erb within layouts/application (40.2ms)
+Completed 200 OK in 297ms (Views: 50.8ms | ActiveRecord: 1.4ms)
+
+
+Started GET "/users/1/articles/1" for 127.0.0.1 at Mon Jun 06 14:40:19 +0400 2011
+  Processing by ArticlesController#show as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mArticle Load (0.3ms)[0m  SELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1
+  [1m[36mCategory Load (0.3ms)[0m  [1mSELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+  [1m[36mComment Load (0.3ms)[0m  [1mSELECT "comments".* FROM "comments" WHERE ("comments".article_id = 1)[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+Rendered articles/show.html.erb within layouts/application (160.5ms)
+Completed 200 OK in 252ms (Views: 170.6ms | ActiveRecord: 1.7ms)
+
+
+Started GET "/users/1/articles/1/edit" for 127.0.0.1 at Mon Jun 06 14:41:33 +0400 2011
+  Processing by ArticlesController#edit as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[35mUser Load (0.5ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mArticle Load (0.3ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 AND ("articles".user_id = 1) LIMIT 1[0m
+  [1m[35mCategory Load (0.3ms)[0m  SELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1
+  [1m[36mCategory Load (0.3ms)[0m  [1mSELECT "categories".* FROM "categories" WHERE ("categories".user_id = 1)[0m
+Rendered articles/_form.html.erb (98.5ms)
+Rendered articles/edit.html.erb within layouts/application (110.8ms)
+Completed 200 OK in 224ms (Views: 120.8ms | ActiveRecord: 1.4ms)
+
+
+Started GET "/home/index" for 127.0.0.1 at Mon Jun 06 14:41:36 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+  [1m[35mArticle Load (0.4ms)[0m  SELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+Rendered articles/_article.html.erb (127.6ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+Rendered home/index.html.erb within layouts/application (163.2ms)
+Completed 200 OK in 354ms (Views: 172.3ms | ActiveRecord: 1.9ms)
+
+
+Started POST "/home/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:41:40 +0400 2011
+
+ActionController::RoutingError (No route matches "/home/users/1/votes"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started POST "/home/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:41:42 +0400 2011
+
+ActionController::RoutingError (No route matches "/home/users/1/votes"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started POST "/home/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:41:42 +0400 2011
+
+ActionController::RoutingError (No route matches "/home/users/1/votes"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started POST "/home/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:41:44 +0400 2011
+
+ActionController::RoutingError (No route matches "/home/users/1/votes"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started POST "/home/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:41:44 +0400 2011
+
+ActionController::RoutingError (No route matches "/home/users/1/votes"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started POST "/home/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:41:44 +0400 2011
+
+ActionController::RoutingError (No route matches "/home/users/1/votes"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.1ms)
+
+
+Started GET "/users/1/articles/1" for 127.0.0.1 at Mon Jun 06 14:41:45 +0400 2011
+  Processing by ArticlesController#show as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mCategory Load (0.3ms)[0m  SELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+  [1m[35mComment Load (0.3ms)[0m  SELECT "comments".* FROM "comments" WHERE ("comments".article_id = 1)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered articles/show.html.erb within layouts/application (162.3ms)
+Completed 200 OK in 347ms (Views: 172.2ms | ActiveRecord: 1.6ms)
+
+
+Started POST "/home/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:41:49 +0400 2011
+
+ActionController::RoutingError (No route matches "/home/users/1/votes"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.3ms)
+
+
+Started POST "/home/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:41:49 +0400 2011
+
+ActionController::RoutingError (No route matches "/home/users/1/votes"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.2ms)
+
+
+Started GET "/users/1/articles/1" for 127.0.0.1 at Mon Jun 06 14:42:55 +0400 2011
+  Processing by ArticlesController#show as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[36mSQL (1.2ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mArticle Load (0.3ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mCategory Load (0.3ms)[0m  SELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+  [1m[35mComment Load (0.3ms)[0m  SELECT "comments".* FROM "comments" WHERE ("comments".article_id = 1)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered articles/show.html.erb within layouts/application (196.4ms)
+Completed 200 OK in 291ms (Views: 206.3ms | ActiveRecord: 2.7ms)
+
+
+Started POST "/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:42:57 +0400 2011
+  Processing by VotesController#create as 
+  Parameters: {"result"=>"for", "article_id"=>"1", "user_id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mArticle Load (0.3ms)[0m  SELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."article_id" = 1 AND ("votes".user_id = 1)[0m
+Rendered votes/create.js.erb (0.9ms)
+Completed 200 OK in 227ms (Views: 49.6ms | ActiveRecord: 1.0ms)
+
+
+Started POST "/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:43:01 +0400 2011
+  Processing by VotesController#create as 
+  Parameters: {"result"=>"against", "article_id"=>"1", "user_id"=>"1"}
+  [1m[35mUser Load (0.5ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mArticle Load (0.3ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."article_id" = 1 AND ("votes".user_id = 1)
+Rendered votes/create.js.erb (1.0ms)
+Completed 200 OK in 227ms (Views: 44.9ms | ActiveRecord: 1.1ms)
+
+
+Started GET "/users/1/articles/1" for 127.0.0.1 at Mon Jun 06 14:43:04 +0400 2011
+  Processing by ArticlesController#show as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mArticle Load (0.3ms)[0m  SELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1
+  [1m[36mCategory Load (0.3ms)[0m  [1mSELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+  [1m[36mComment Load (0.3ms)[0m  [1mSELECT "comments".* FROM "comments" WHERE ("comments".article_id = 1)[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+Rendered articles/show.html.erb within layouts/application (173.8ms)
+Completed 200 OK in 264ms (Views: 184.0ms | ActiveRecord: 1.5ms)
+
+
+Started POST "/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:43:07 +0400 2011
+  Processing by VotesController#create as 
+  Parameters: {"result"=>"against", "article_id"=>"1", "user_id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mArticle Load (0.3ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."article_id" = 1 AND ("votes".user_id = 1)
+Rendered votes/create.js.erb (0.9ms)
+Completed 200 OK in 214ms (Views: 44.8ms | ActiveRecord: 0.9ms)
+
+
+Started POST "/users/1/votes" for 127.0.0.1 at Mon Jun 06 14:43:09 +0400 2011
+  Processing by VotesController#create as 
+  Parameters: {"result"=>"for", "article_id"=>"1", "user_id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mArticle Load (0.3ms)[0m  SELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."article_id" = 1 AND ("votes".user_id = 1)[0m
+Rendered votes/create.js.erb (1.0ms)
+Completed 200 OK in 234ms (Views: 46.1ms | ActiveRecord: 0.9ms)
+  [1m[36mSQL (1.1ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.7ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.6ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to DeviseCreateUsers (20110527175143)
+Migrating to CreateCategories (20110527175554)
+Migrating to CreateVotes (20110527175629)
+Migrating to CreateComments (20110527175706)
+Migrating to AddLoginToUsers (20110527191952)
+Migrating to CreateUserChildren (20110528175358)
+Migrating to CreateUsersChildren (20110528175422)
+Migrating to CreateArticles (20110528184458)
+Migrating to RenameNewIdToArticleIdInVotesAndComments (20110528184857)
+Migrating to AddAvatarColumnsToUser (20110529190019)
+  [1m[35mSQL (0.2ms)[0m  select sqlite_version(*)
+  [1m[36mSQL (0.3ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT "schema_migrations"."version" FROM "schema_migrations"
+  [1m[36mSQL (0.3ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("articles")
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("categories")[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("comments")
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("user_children")[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("users")
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_info('index_users_on_reset_password_token')[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_info('index_users_on_email')
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("users_children")[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("votes")
+  [1m[36mSQL (1.1ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.3ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+
+
+Started GET "/" for 127.0.0.1 at Tue Jun 07 00:08:05 +0400 2011
+  Processing by HomeController#index as HTML
+Completed   in 2ms
+
+
+Started GET "/users/sign_in" for 127.0.0.1 at Tue Jun 07 00:08:05 +0400 2011
+  Processing by Devise::SessionsController#new as HTML
+Rendered devise/shared/_links.erb (2.7ms)
+Rendered devise/sessions/new.html.erb within layouts/application (21.9ms)
+Completed 200 OK in 124ms (Views: 71.0ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/users/sign_in" for 127.0.0.1 at Tue Jun 07 00:08:18 +0400 2011
+  Processing by Devise::SessionsController#create as HTML
+  Parameters: {"commit"=>"Sign in", "authenticity_token"=>"TzRpgJmON5y5p2wZ5AlkQD5ll44ul5SB0gen9bZ9fJU=", "utf8"=>"✓", "user"=>{"remember_me"=>"0", "login"=>"tancor", "password"=>"[FILTERED]"}}
+  [1m[36mSQL (1.0ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."login" = 'tancor' LIMIT 1
+Completed   in 88ms
+  Processing by Devise::SessionsController#new as HTML
+  Parameters: {"commit"=>"Sign in", "authenticity_token"=>"TzRpgJmON5y5p2wZ5AlkQD5ll44ul5SB0gen9bZ9fJU=", "utf8"=>"✓", "user"=>{"remember_me"=>"0", "login"=>"tancor", "password"=>"[FILTERED]"}}
+Rendered devise/shared/_links.erb (2.5ms)
+Rendered devise/sessions/new.html.erb within layouts/application (16.3ms)
+Completed 200 OK in 197ms (Views: 28.5ms | ActiveRecord: 1.4ms)
+
+
+Started POST "/users/sign_in" for 127.0.0.1 at Tue Jun 07 00:08:28 +0400 2011
+  Processing by Devise::SessionsController#create as HTML
+  Parameters: {"commit"=>"Sign in", "authenticity_token"=>"TzRpgJmON5y5p2wZ5AlkQD5ll44ul5SB0gen9bZ9fJU=", "utf8"=>"✓", "user"=>{"remember_me"=>"0", "login"=>"RuslanMulyukov", "password"=>"[FILTERED]"}}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."login" = 'RuslanMulyukov' LIMIT 1[0m
+Completed   in 122ms
+  Processing by Devise::SessionsController#new as HTML
+  Parameters: {"commit"=>"Sign in", "authenticity_token"=>"TzRpgJmON5y5p2wZ5AlkQD5ll44ul5SB0gen9bZ9fJU=", "utf8"=>"✓", "user"=>{"remember_me"=>"0", "login"=>"RuslanMulyukov", "password"=>"[FILTERED]"}}
+Rendered devise/shared/_links.erb (2.5ms)
+Rendered devise/sessions/new.html.erb within layouts/application (16.7ms)
+Completed 200 OK in 198ms (Views: 28.8ms | ActiveRecord: 0.3ms)
+
+
+Started GET "/users/sign_up" for 127.0.0.1 at Tue Jun 07 00:08:32 +0400 2011
+  Processing by Devise::RegistrationsController#new as HTML
+Rendered devise/shared/_links.erb (2.7ms)
+Rendered devise/registrations/new.html.erb within layouts/application (614.9ms)
+Completed 200 OK in 672ms (Views: 639.8ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/validators/uniqueness.json?case_sensitive=true&user%5Blogin%5D=tancor" for 127.0.0.1 at Tue Jun 07 00:08:37 +0400 2011
+  [1m[35mUser Load (0.2ms)[0m  SELECT "users"."id" FROM "users" WHERE "users"."login" = 'tancor' LIMIT 1
+
+
+Started GET "/validators/uniqueness.json?case_sensitive=true&scope=&user%5Bemail%5D=Ret85%40mail.ru" for 127.0.0.1 at Tue Jun 07 00:08:43 +0400 2011
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users"."id" FROM "users" WHERE "users"."email" = 'Ret85@mail.ru' LIMIT 1[0m
+
+
+Started POST "/users" for 127.0.0.1 at Tue Jun 07 00:08:53 +0400 2011
+  Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"commit"=>"Sign up", "authenticity_token"=>"TzRpgJmON5y5p2wZ5AlkQD5ll44ul5SB0gen9bZ9fJU=", "utf8"=>"✓", "user"=>{"name"=>"ruslan", "password_confirmation"=>"[FILTERED]", "avatar"=>"", "sex"=>"man", "login"=>"tancor", "password"=>"[FILTERED]", "email"=>"Ret85@mail.ru"}}
+WARNING: Can't mass-assign protected attributes: avatar
+  [1m[35mUser Load (0.2ms)[0m  SELECT "users"."id" FROM "users" WHERE ("users"."email" = 'Ret85@mail.ru') LIMIT 1
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users"."id" FROM "users" WHERE ("users"."login" = 'tancor') LIMIT 1[0m
+  [1m[35mAREL (18.4ms)[0m  INSERT INTO "users" ("name", "current_sign_in_ip", "last_sign_in_ip", "encrypted_password", "avatar_updated_at", "current_sign_in_at", "updated_at", "email", "login", "remember_created_at", "avatar_file_size", "reset_password_token", "avatar_content_type", "avatar_file_name", "sex", "sign_in_count", "last_sign_in_at", "birthday", "created_at") VALUES ('ruslan', NULL, NULL, '$2a$10$nuExxu9IVNNhmQiLo7Z5auK5kvHB1Ixux9pUa8AU6Uu1Y69bl0cIC', NULL, NULL, '2011-06-06 20:08:53.568363', 'ret85@mail.ru', 'tancor', NULL, NULL, NULL, NULL, NULL, 'man', 0, NULL, NULL, '2011-06-06 20:08:53.568363')
+SQLite3::ConstraintException: column email is not unique: INSERT INTO "users" ("name", "current_sign_in_ip", "last_sign_in_ip", "encrypted_password", "avatar_updated_at", "current_sign_in_at", "updated_at", "email", "login", "remember_created_at", "avatar_file_size", "reset_password_token", "avatar_content_type", "avatar_file_name", "sex", "sign_in_count", "last_sign_in_at", "birthday", "created_at") VALUES ('ruslan', NULL, NULL, '$2a$10$nuExxu9IVNNhmQiLo7Z5auK5kvHB1Ixux9pUa8AU6Uu1Y69bl0cIC', NULL, NULL, '2011-06-06 20:08:53.568363', 'ret85@mail.ru', 'tancor', NULL, NULL, NULL, NULL, NULL, 'man', 0, NULL, NULL, '2011-06-06 20:08:53.568363')
+Completed   in 400ms
+
+ActiveRecord::RecordNotUnique (SQLite3::ConstraintException: column email is not unique: INSERT INTO "users" ("name", "current_sign_in_ip", "last_sign_in_ip", "encrypted_password", "avatar_updated_at", "current_sign_in_at", "updated_at", "email", "login", "remember_created_at", "avatar_file_size", "reset_password_token", "avatar_content_type", "avatar_file_name", "sex", "sign_in_count", "last_sign_in_at", "birthday", "created_at") VALUES ('ruslan', NULL, NULL, '$2a$10$nuExxu9IVNNhmQiLo7Z5auK5kvHB1Ixux9pUa8AU6Uu1Y69bl0cIC', NULL, NULL, '2011-06-06 20:08:53.568363', 'ret85@mail.ru', 'tancor', NULL, NULL, NULL, NULL, NULL, 'man', 0, NULL, NULL, '2011-06-06 20:08:53.568363')):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/_trace.erb (2.0ms)
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (708.4ms)
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (722.6ms)
+  [1m[36mSQL (1.1ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.3ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to DeviseCreateUsers (20110527175143)
+Migrating to CreateCategories (20110527175554)
+Migrating to CreateVotes (20110527175629)
+Migrating to CreateComments (20110527175706)
+Migrating to AddLoginToUsers (20110527191952)
+Migrating to CreateUserChildren (20110528175358)
+Migrating to CreateUsersChildren (20110528175422)
+Migrating to CreateArticles (20110528184458)
+Migrating to RenameNewIdToArticleIdInVotesAndComments (20110528184857)
+Migrating to AddAvatarColumnsToUser (20110529190019)
+  [1m[35mSQL (0.2ms)[0m  select sqlite_version(*)
+  [1m[36mSQL (0.4ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT "schema_migrations"."version" FROM "schema_migrations"
+  [1m[36mSQL (0.3ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("articles")
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("categories")[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("comments")
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("user_children")[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("users")
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_info('index_users_on_reset_password_token')[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_info('index_users_on_email')
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("users_children")[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("votes")
+
+
+Started GET "/users/sign_up" for 127.0.0.1 at Tue Jun 07 00:10:35 +0400 2011
+  Processing by Devise::RegistrationsController#new as HTML
+Rendered devise/shared/_links.erb (2.6ms)
+Rendered devise/registrations/new.html.erb within layouts/application (532.7ms)
+Completed 200 OK in 550ms (Views: 545.6ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/validators/uniqueness.json?case_sensitive=true&user%5Blogin%5D=tancor" for 127.0.0.1 at Tue Jun 07 00:11:02 +0400 2011
+  [1m[36mSQL (0.4ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mUser Load (0.3ms)[0m  SELECT "users"."id" FROM "users" WHERE "users"."login" = 'tancor' LIMIT 1
+
+
+Started GET "/validators/uniqueness.json?case_sensitive=true&scope=&user%5Bemail%5D=Ret85%40mail.ru" for 127.0.0.1 at Tue Jun 07 00:11:02 +0400 2011
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users"."id" FROM "users" WHERE "users"."email" = 'Ret85@mail.ru' LIMIT 1[0m
+
+
+Started POST "/users" for 127.0.0.1 at Tue Jun 07 00:11:02 +0400 2011
+  Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"commit"=>"Sign up", "authenticity_token"=>"TzRpgJmON5y5p2wZ5AlkQD5ll44ul5SB0gen9bZ9fJU=", "utf8"=>"✓", "user"=>{"name"=>"ruslan", "password_confirmation"=>"[FILTERED]", "avatar"=>"", "sex"=>"man", "login"=>"tancor", "password"=>"[FILTERED]", "email"=>"Ret85@mail.ru"}}
+WARNING: Can't mass-assign protected attributes: avatar
+  [1m[35mUser Load (0.2ms)[0m  SELECT "users"."id" FROM "users" WHERE ("users"."email" = 'Ret85@mail.ru') LIMIT 1
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users"."id" FROM "users" WHERE ("users"."login" = 'tancor') LIMIT 1[0m
+  [1m[35mAREL (0.8ms)[0m  INSERT INTO "users" ("sign_in_count", "created_at", "birthday", "reset_password_token", "current_sign_in_ip", "avatar_content_type", "name", "last_sign_in_ip", "avatar_file_name", "email", "current_sign_in_at", "encrypted_password", "sex", "login", "avatar_updated_at", "updated_at", "remember_created_at", "avatar_file_size", "last_sign_in_at") VALUES (0, '2011-06-06 20:11:03.192804', NULL, NULL, NULL, NULL, 'ruslan', NULL, NULL, 'ret85@mail.ru', NULL, '$2a$10$kd3CDUHkme2EHp1w67Cc4ObKcNSk.9rNBto/mHLa8dv46XjIOlPyC', 'man', 'tancor', NULL, '2011-06-06 20:11:03.192804', NULL, NULL, NULL)
+SQLite3::ConstraintException: column email is not unique: INSERT INTO "users" ("sign_in_count", "created_at", "birthday", "reset_password_token", "current_sign_in_ip", "avatar_content_type", "name", "last_sign_in_ip", "avatar_file_name", "email", "current_sign_in_at", "encrypted_password", "sex", "login", "avatar_updated_at", "updated_at", "remember_created_at", "avatar_file_size", "last_sign_in_at") VALUES (0, '2011-06-06 20:11:03.192804', NULL, NULL, NULL, NULL, 'ruslan', NULL, NULL, 'ret85@mail.ru', NULL, '$2a$10$kd3CDUHkme2EHp1w67Cc4ObKcNSk.9rNBto/mHLa8dv46XjIOlPyC', 'man', 'tancor', NULL, '2011-06-06 20:11:03.192804', NULL, NULL, NULL)
+Completed   in 216ms
+
+ActiveRecord::RecordNotUnique (SQLite3::ConstraintException: column email is not unique: INSERT INTO "users" ("sign_in_count", "created_at", "birthday", "reset_password_token", "current_sign_in_ip", "avatar_content_type", "name", "last_sign_in_ip", "avatar_file_name", "email", "current_sign_in_at", "encrypted_password", "sex", "login", "avatar_updated_at", "updated_at", "remember_created_at", "avatar_file_size", "last_sign_in_at") VALUES (0, '2011-06-06 20:11:03.192804', NULL, NULL, NULL, NULL, 'ruslan', NULL, NULL, 'ret85@mail.ru', NULL, '$2a$10$kd3CDUHkme2EHp1w67Cc4ObKcNSk.9rNBto/mHLa8dv46XjIOlPyC', 'man', 'tancor', NULL, '2011-06-06 20:11:03.192804', NULL, NULL, NULL)):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.9ms)
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (706.8ms)
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (806.8ms)
+
+
+Started POST "/users" for 127.0.0.1 at Tue Jun 07 00:11:11 +0400 2011
+  Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"commit"=>"Sign up", "authenticity_token"=>"TzRpgJmON5y5p2wZ5AlkQD5ll44ul5SB0gen9bZ9fJU=", "utf8"=>"✓", "user"=>{"name"=>"ruslan", "password_confirmation"=>"[FILTERED]", "avatar"=>"", "sex"=>"man", "login"=>"tancor", "password"=>"[FILTERED]", "email"=>"Ret85@mail.ru"}}
+WARNING: Can't mass-assign protected attributes: avatar
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users"."id" FROM "users" WHERE ("users"."email" = 'Ret85@mail.ru') LIMIT 1[0m
+  [1m[35mUser Load (0.2ms)[0m  SELECT "users"."id" FROM "users" WHERE ("users"."login" = 'tancor') LIMIT 1
+  [1m[36mAREL (0.7ms)[0m  [1mINSERT INTO "users" ("remember_created_at", "last_sign_in_ip", "sign_in_count", "avatar_file_size", "login", "birthday", "avatar_content_type", "last_sign_in_at", "reset_password_token", "sex", "updated_at", "created_at", "avatar_updated_at", "current_sign_in_at", "current_sign_in_ip", "encrypted_password", "email", "avatar_file_name", "name") VALUES (NULL, NULL, 0, NULL, 'tancor', NULL, NULL, NULL, NULL, 'man', '2011-06-06 20:11:11.389085', '2011-06-06 20:11:11.389085', NULL, NULL, NULL, '$2a$10$x662yn6AfhXNeQZvLH0tP./183xg.5m97OY4p7aAn8a2sn1LVMPwe', 'ret85@mail.ru', NULL, 'ruslan')[0m
+SQLite3::ConstraintException: column email is not unique: INSERT INTO "users" ("remember_created_at", "last_sign_in_ip", "sign_in_count", "avatar_file_size", "login", "birthday", "avatar_content_type", "last_sign_in_at", "reset_password_token", "sex", "updated_at", "created_at", "avatar_updated_at", "current_sign_in_at", "current_sign_in_ip", "encrypted_password", "email", "avatar_file_name", "name") VALUES (NULL, NULL, 0, NULL, 'tancor', NULL, NULL, NULL, NULL, 'man', '2011-06-06 20:11:11.389085', '2011-06-06 20:11:11.389085', NULL, NULL, NULL, '$2a$10$x662yn6AfhXNeQZvLH0tP./183xg.5m97OY4p7aAn8a2sn1LVMPwe', 'ret85@mail.ru', NULL, 'ruslan')
+Completed   in 222ms
+
+ActiveRecord::RecordNotUnique (SQLite3::ConstraintException: column email is not unique: INSERT INTO "users" ("remember_created_at", "last_sign_in_ip", "sign_in_count", "avatar_file_size", "login", "birthday", "avatar_content_type", "last_sign_in_at", "reset_password_token", "sex", "updated_at", "created_at", "avatar_updated_at", "current_sign_in_at", "current_sign_in_ip", "encrypted_password", "email", "avatar_file_name", "name") VALUES (NULL, NULL, 0, NULL, 'tancor', NULL, NULL, NULL, NULL, 'man', '2011-06-06 20:11:11.389085', '2011-06-06 20:11:11.389085', NULL, NULL, NULL, '$2a$10$x662yn6AfhXNeQZvLH0tP./183xg.5m97OY4p7aAn8a2sn1LVMPwe', 'ret85@mail.ru', NULL, 'ruslan')):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/_trace.erb (2.1ms)
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (747.5ms)
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (766.1ms)
+  [1m[36mSQL (1.6ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.3ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.5ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to DeviseCreateUsers (20110527175143)
+Migrating to CreateCategories (20110527175554)
+Migrating to CreateVotes (20110527175629)
+Migrating to CreateComments (20110527175706)
+Migrating to AddLoginToUsers (20110527191952)
+Migrating to CreateUserChildren (20110528175358)
+Migrating to CreateUsersChildren (20110528175422)
+Migrating to CreateArticles (20110528184458)
+Migrating to RenameNewIdToArticleIdInVotesAndComments (20110528184857)
+Migrating to AddAvatarColumnsToUser (20110529190019)
+  [1m[35mSQL (0.2ms)[0m  select sqlite_version(*)
+  [1m[36mSQL (0.3ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT "schema_migrations"."version" FROM "schema_migrations"
+  [1m[36mSQL (0.3ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("articles")
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("categories")[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("comments")
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("user_children")[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("users")
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_info('index_users_on_reset_password_token')[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_info('index_users_on_email')
+  [1m[36mSQL (0.1ms)[0m  [1mPRAGMA index_list("users_children")[0m
+  [1m[35mSQL (0.1ms)[0m  PRAGMA index_list("votes")
+
+
+Started GET "/" for 127.0.0.1 at Tue Jun 07 01:10:18 +0400 2011
+  Processing by HomeController#index as HTML
+Completed   in 1ms
+
+
+Started GET "/users/sign_in" for 127.0.0.1 at Tue Jun 07 01:10:18 +0400 2011
+  Processing by Devise::SessionsController#new as HTML
+Rendered devise/shared/_links.erb (2.8ms)
+Rendered devise/sessions/new.html.erb within layouts/application (17.6ms)
+Completed 200 OK in 83ms (Views: 30.4ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/users/sign_up" for 127.0.0.1 at Tue Jun 07 01:10:24 +0400 2011
+  Processing by Devise::RegistrationsController#new as HTML
+Rendered devise/shared/_links.erb (2.7ms)
+Rendered devise/registrations/new.html.erb within layouts/application (523.6ms)
+Completed 200 OK in 570ms (Views: 535.8ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/validators/uniqueness.json?case_sensitive=true&user%5Blogin%5D=tancor" for 127.0.0.1 at Tue Jun 07 01:10:32 +0400 2011
+  [1m[36mSQL (0.7ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mUser Load (0.3ms)[0m  SELECT "users"."id" FROM "users" WHERE "users"."login" = 'tancor' LIMIT 1
+
+
+Started GET "/validators/uniqueness.json?case_sensitive=true&user%5Blogin%5D=RuslanMulyukov" for 127.0.0.1 at Tue Jun 07 01:10:47 +0400 2011
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users"."id" FROM "users" WHERE "users"."login" = 'RuslanMulyukov' LIMIT 1[0m
+
+
+Started GET "/validators/uniqueness.json?case_sensitive=true&scope=&user%5Bemail%5D=Ret85%40mail.ru" for 127.0.0.1 at Tue Jun 07 01:10:55 +0400 2011
+  [1m[35mUser Load (0.2ms)[0m  SELECT "users"."id" FROM "users" WHERE "users"."email" = 'Ret85@mail.ru' LIMIT 1
+
+
+Started POST "/users" for 127.0.0.1 at Tue Jun 07 01:11:05 +0400 2011
+  Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"commit"=>"Sign up", "authenticity_token"=>"2yHFPm8W/rmfTPQrgEAgaYayJdO0kIkzZyp3lQ6LwiA=", "utf8"=>"✓", "user"=>{"name"=>"ruslan mulukov", "password_confirmation"=>"[FILTERED]", "avatar"=>"index.jpeg", "sex"=>"man", "login"=>"RuslanMulyukov", "password"=>"[FILTERED]", "email"=>"Ret85@mail.ru"}}
+WARNING: Can't mass-assign protected attributes: avatar
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users"."id" FROM "users" WHERE ("users"."email" = 'Ret85@mail.ru') LIMIT 1[0m
+  [1m[35mUser Load (0.2ms)[0m  SELECT "users"."id" FROM "users" WHERE ("users"."login" = 'RuslanMulyukov') LIMIT 1
+  [1m[36mAREL (1.3ms)[0m  [1mINSERT INTO "users" ("updated_at", "name", "encrypted_password", "birthday", "reset_password_token", "sex", "login", "sign_in_count", "avatar_file_size", "email", "avatar_updated_at", "remember_created_at", "current_sign_in_at", "current_sign_in_ip", "avatar_file_name", "last_sign_in_at", "last_sign_in_ip", "avatar_content_type", "created_at") VALUES ('2011-06-06 21:11:06.036656', 'ruslan mulukov', '$2a$10$6cXj5coDln8aalihHpEcMOKqOtph5BoLhgEETmc0z8y0BuA0u2tnC', NULL, NULL, 'man', 'RuslanMulyukov', 0, NULL, 'ret85@mail.ru', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2011-06-06 21:11:06.036656')[0m
+SQLite3::ConstraintException: column email is not unique: INSERT INTO "users" ("updated_at", "name", "encrypted_password", "birthday", "reset_password_token", "sex", "login", "sign_in_count", "avatar_file_size", "email", "avatar_updated_at", "remember_created_at", "current_sign_in_at", "current_sign_in_ip", "avatar_file_name", "last_sign_in_at", "last_sign_in_ip", "avatar_content_type", "created_at") VALUES ('2011-06-06 21:11:06.036656', 'ruslan mulukov', '$2a$10$6cXj5coDln8aalihHpEcMOKqOtph5BoLhgEETmc0z8y0BuA0u2tnC', NULL, NULL, 'man', 'RuslanMulyukov', 0, NULL, 'ret85@mail.ru', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2011-06-06 21:11:06.036656')
+Completed   in 244ms
+
+ActiveRecord::RecordNotUnique (SQLite3::ConstraintException: column email is not unique: INSERT INTO "users" ("updated_at", "name", "encrypted_password", "birthday", "reset_password_token", "sex", "login", "sign_in_count", "avatar_file_size", "email", "avatar_updated_at", "remember_created_at", "current_sign_in_at", "current_sign_in_ip", "avatar_file_name", "last_sign_in_at", "last_sign_in_ip", "avatar_content_type", "created_at") VALUES ('2011-06-06 21:11:06.036656', 'ruslan mulukov', '$2a$10$6cXj5coDln8aalihHpEcMOKqOtph5BoLhgEETmc0z8y0BuA0u2tnC', NULL, NULL, 'man', 'RuslanMulyukov', 0, NULL, 'ret85@mail.ru', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2011-06-06 21:11:06.036656')):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/_trace.erb (2.2ms)
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (708.7ms)
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (731.8ms)
+
+
+Started GET "/validators/uniqueness.json?case_sensitive=true&scope=&user%5Bemail%5D=Ret857%40mail.ru" for 127.0.0.1 at Tue Jun 07 01:11:42 +0400 2011
+  [1m[35mUser Load (0.2ms)[0m  SELECT "users"."id" FROM "users" WHERE "users"."email" = 'Ret857@mail.ru' LIMIT 1
+
+
+Started POST "/users" for 127.0.0.1 at Tue Jun 07 01:11:50 +0400 2011
+  Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"commit"=>"Sign up", "authenticity_token"=>"2yHFPm8W/rmfTPQrgEAgaYayJdO0kIkzZyp3lQ6LwiA=", "utf8"=>"✓", "user"=>{"name"=>"ruslan mulukov", "password_confirmation"=>"[FILTERED]", "avatar"=>"index.jpeg", "sex"=>"man", "login"=>"RuslanMulyukov", "password"=>"[FILTERED]", "email"=>"Ret857@mail.ru"}}
+WARNING: Can't mass-assign protected attributes: avatar
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users"."id" FROM "users" WHERE ("users"."email" = 'Ret857@mail.ru') LIMIT 1[0m
+  [1m[35mUser Load (0.2ms)[0m  SELECT "users"."id" FROM "users" WHERE ("users"."login" = 'RuslanMulyukov') LIMIT 1
+  [1m[36mAREL (0.6ms)[0m  [1mINSERT INTO "users" ("login", "created_at", "birthday", "avatar_file_size", "current_sign_in_at", "reset_password_token", "last_sign_in_at", "avatar_updated_at", "avatar_file_name", "name", "last_sign_in_ip", "updated_at", "sex", "sign_in_count", "encrypted_password", "email", "remember_created_at", "current_sign_in_ip", "avatar_content_type") VALUES ('RuslanMulyukov', '2011-06-06 21:11:50.536021', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ruslan mulukov', NULL, '2011-06-06 21:11:50.536021', 'man', 0, '$2a$10$xX9p8VAQoxAvb1UG6FBbEuzv0ypu/QmgwQM3dgsKSnd.KBNNCyC6K', 'ret857@mail.ru', NULL, NULL, NULL)[0m
+[paperclip] Saving attachments.
+  [1m[35mAREL (0.4ms)[0m  UPDATE "users" SET "current_sign_in_at" = '2011-06-06 21:11:50.548968', "last_sign_in_at" = '2011-06-06 21:11:50.548968', "last_sign_in_ip" = '127.0.0.1', "updated_at" = '2011-06-06 21:11:50.550759', "sign_in_count" = 1, "current_sign_in_ip" = '127.0.0.1' WHERE "users"."id" = 2
+[paperclip] Saving attachments.
+Redirected to http://localhost:3000/
+Completed 302 Found in 312ms
+
+
+Started GET "/" for 127.0.0.1 at Tue Jun 07 01:11:50 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.5ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mUser Load (0.5ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (48.6ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (189.8ms)
+Completed 200 OK in 303ms (Views: 199.0ms | ActiveRecord: 2.7ms)
+
+
+Started POST "/users/2/votes" for 127.0.0.1 at Tue Jun 07 01:11:54 +0400 2011
+  Processing by VotesController#create as 
+  Parameters: {"result"=>"for", "article_id"=>"1", "user_id"=>"2"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1[0m
+  [1m[35mArticle Load (0.5ms)[0m  SELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."article_id" = 1 AND ("votes".user_id = 2)[0m
+  [1m[35mAREL (0.3ms)[0m  INSERT INTO "votes" ("user_id", "result", "updated_at", "created_at", "article_id") VALUES (2, 'for', '2011-06-06 21:11:55.002483', '2011-06-06 21:11:55.002483', 1)
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND "votes"."article_id" = 1 AND ("votes".article_id = 1)[0m
+Rendered votes/create.js.erb (1.0ms)
+Completed 200 OK in 277ms (Views: 56.8ms | ActiveRecord: 1.9ms)
+
+
+Started POST "/users/2/votes" for 127.0.0.1 at Tue Jun 07 01:11:56 +0400 2011
+  Processing by VotesController#create as 
+  Parameters: {"result"=>"for", "article_id"=>"1", "user_id"=>"2"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1
+  [1m[36mArticle Load (0.3ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."article_id" = 1 AND ("votes".user_id = 2)
+Rendered votes/create.js.erb (0.9ms)
+Completed 200 OK in 253ms (Views: 51.5ms | ActiveRecord: 1.0ms)
+
+
+Started POST "/users/2/votes" for 127.0.0.1 at Tue Jun 07 01:11:58 +0400 2011
+  Processing by VotesController#create as 
+  Parameters: {"result"=>"against", "article_id"=>"1", "user_id"=>"2"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1[0m
+  [1m[35mArticle Load (0.3ms)[0m  SELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.4ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."article_id" = 1 AND ("votes".user_id = 2)[0m
+Rendered votes/create.js.erb (0.9ms)
+Completed 200 OK in 254ms (Views: 52.7ms | ActiveRecord: 1.2ms)
+
+
+Started GET "/users/1/articles/1" for 127.0.0.1 at Tue Jun 07 01:12:00 +0400 2011
+  Processing by ArticlesController#show as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1
+  [1m[36mArticle Load (0.3ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mCategory Load (0.3ms)[0m  SELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+  [1m[35mComment Load (0.3ms)[0m  SELECT "comments".* FROM "comments" WHERE ("comments".article_id = 1)
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered articles/show.html.erb within layouts/application (160.1ms)
+Completed 200 OK in 340ms (Views: 170.9ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/" for 127.0.0.1 at Tue Jun 07 01:12:02 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mUser Load (0.6ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (59.4ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (98.1ms)
+Completed 200 OK in 279ms (Views: 108.2ms | ActiveRecord: 2.6ms)
+
+
+Started GET "/users/1/articles/1" for 127.0.0.1 at Tue Jun 07 01:12:05 +0400 2011
+  Processing by ArticlesController#show as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1[0m
+  [1m[35mArticle Load (0.3ms)[0m  SELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1
+  [1m[36mCategory Load (0.3ms)[0m  [1mSELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+  [1m[36mComment Load (0.3ms)[0m  [1mSELECT "comments".* FROM "comments" WHERE ("comments".article_id = 1)[0m
+  [1m[35mUser Load (0.5ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+Rendered articles/show.html.erb within layouts/application (167.6ms)
+Completed 200 OK in 338ms (Views: 178.1ms | ActiveRecord: 2.2ms)
+
+
+Started GET "/" for 127.0.0.1 at Tue Jun 07 01:12:08 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+  [1m[35mArticle Load (0.4ms)[0m  SELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+Rendered articles/_article.html.erb (63.2ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+Rendered home/index.html.erb within layouts/application (101.5ms)
+Completed 200 OK in 264ms (Views: 111.2ms | ActiveRecord: 2.6ms)
+
+
+Started GET "/users/1/articles/1" for 127.0.0.1 at Tue Jun 07 01:12:09 +0400 2011
+  Processing by ArticlesController#show as HTML
+  Parameters: {"id"=>"1", "user_id"=>"1"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1
+  [1m[36mArticle Load (0.3ms)[0m  [1mSELECT "articles".* FROM "articles" WHERE "articles"."id" = 1 LIMIT 1[0m
+  [1m[35mCategory Load (0.3ms)[0m  SELECT "categories".* FROM "categories" WHERE "categories"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+  [1m[35mComment Load (0.3ms)[0m  SELECT "comments".* FROM "comments" WHERE ("comments".article_id = 1)
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+Rendered articles/show.html.erb within layouts/application (164.0ms)
+Completed 200 OK in 373ms (Views: 174.6ms | ActiveRecord: 2.1ms)
+
+
+Started GET "/" for 127.0.0.1 at Tue Jun 07 01:12:12 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "articles"
+  [1m[36mArticle Load (0.4ms)[0m  [1mSELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0[0m
+  [1m[35mUser Load (0.5ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)[0m
+Rendered articles/_article.html.erb (60.4ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles"
+Rendered home/index.html.erb within layouts/application (99.5ms)
+Completed 200 OK in 281ms (Views: 109.0ms | ActiveRecord: 2.6ms)
+
+
+Started GET "/users/2/categories/new" for 127.0.0.1 at Tue Jun 07 01:12:14 +0400 2011
+  Processing by CategoriesController#new as HTML
+  Parameters: {"user_id"=>"2"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1[0m
+  [1m[35mCategory Load (0.3ms)[0m  SELECT "categories".* FROM "categories"
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "categories".* FROM "categories"[0m
+Rendered categories/_form.html.erb (5.5ms)
+Rendered categories/new.html.erb within layouts/application (18.5ms)
+Completed 200 OK in 114ms (Views: 30.2ms | ActiveRecord: 0.7ms)
+
+
+Started GET "/" for 127.0.0.1 at Tue Jun 07 01:12:18 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[35mUser Load (0.5ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+  [1m[35mArticle Load (0.4ms)[0m  SELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+Rendered articles/_article.html.erb (127.5ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+Rendered home/index.html.erb within layouts/application (165.7ms)
+Completed 200 OK in 327ms (Views: 175.4ms | ActiveRecord: 2.7ms)
+
+
+Started GET "/users/2" for 127.0.0.1 at Tue Jun 07 01:12:20 +0400 2011
+  Processing by UsersController#show as HTML
+  Parameters: {"id"=>"2"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1[0m
+Rendered users/show.html.erb within layouts/application (10.2ms)
+Completed 200 OK in 78ms (Views: 21.9ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Tue Jun 07 01:12:20 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.4ms)
+
+
+Started GET "/home/index" for 127.0.0.1 at Tue Jun 07 01:12:23 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[35mUser Load (0.6ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+  [1m[35mArticle Load (0.4ms)[0m  SELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+Rendered articles/_article.html.erb (132.9ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+Rendered home/index.html.erb within layouts/application (171.6ms)
+Completed 200 OK in 270ms (Views: 181.2ms | ActiveRecord: 2.7ms)
+
+
+Started GET "/users/2" for 127.0.0.1 at Tue Jun 07 01:12:25 +0400 2011
+  Processing by UsersController#show as HTML
+  Parameters: {"id"=>"2"}
+  [1m[35mUser Load (0.5ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1[0m
+Rendered users/show.html.erb within layouts/application (102.1ms)
+Completed 200 OK in 176ms (Views: 114.7ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Tue Jun 07 01:12:25 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.4ms)
+
+
+Started GET "/avatars/small/missing.png" for 127.0.0.1 at Tue Jun 07 01:12:25 +0400 2011
+
+ActionController::RoutingError (No route matches "/avatars/small/missing.png"):
+  
+
+Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.6/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.3ms)
+
+
+Started GET "/users/2/edit" for 127.0.0.1 at Tue Jun 07 01:12:26 +0400 2011
+  Processing by UsersController#edit as HTML
+  Parameters: {"id"=>"2"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1[0m
+Rendered users/_form.html.erb (14.4ms)
+Rendered users/edit.html.erb within layouts/application (25.8ms)
+Completed 200 OK in 95ms (Views: 37.6ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/home/index" for 127.0.0.1 at Tue Jun 07 01:12:28 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[35mUser Load (0.5ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+  [1m[35mArticle Load (0.4ms)[0m  SELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+Rendered articles/_article.html.erb (130.8ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+Rendered home/index.html.erb within layouts/application (168.7ms)
+Completed 200 OK in 347ms (Views: 178.3ms | ActiveRecord: 2.7ms)
+
+
+Started GET "/users/2/edit" for 127.0.0.1 at Tue Jun 07 01:12:31 +0400 2011
+  Processing by UsersController#edit as HTML
+  Parameters: {"id"=>"2"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1[0m
+Rendered users/_form.html.erb (13.8ms)
+Rendered users/edit.html.erb within layouts/application (24.5ms)
+Completed 200 OK in 93ms (Views: 36.2ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/home/index" for 127.0.0.1 at Tue Jun 07 01:12:33 +0400 2011
+  Processing by HomeController#index as HTML
+  [1m[35mUser Load (0.5ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "articles" LIMIT 3 OFFSET 0
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+  [1m[35mArticle Load (0.4ms)[0m  SELECT "articles".* FROM "articles" ORDER BY created_at LIMIT 3 OFFSET 0
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" = 1 LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'for' AND ("votes".article_id = 1)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "votes" WHERE "votes"."result" = 'against' AND ("votes".article_id = 1)[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT COUNT(*) FROM "comments" WHERE ("comments".article_id = 1)
+Rendered articles/_article.html.erb (138.1ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "articles"[0m
+Rendered home/index.html.erb within layouts/application (178.7ms)
+Completed 200 OK in 286ms (Views: 190.3ms | ActiveRecord: 2.8ms)

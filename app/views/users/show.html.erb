@@ -1,0 +1,26 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @user.name %>
+</p>
+
+<p>
+  <b>Avatar:</b>
+  <%= image_tag @user.avatar.url(:small) %>
+</p>
+
+<p>
+  <b>Sex:</b>
+  <%= @user.sex %>
+</p>
+
+<p>
+  <b>Birthday:</b>
+  <%= @user.birthday %>
+</p>
+
+<% if @user == current_user %>
+  <%= link_to 'Edit', edit_user_path(@user) %> |
+  <%= link_to 'Back', home_index_path %>
+<% end %>

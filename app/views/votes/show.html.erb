@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Article:</b>
+  <%= @vote.article.title %>
+</p>
+
+<p>
+  <b>Result:</b>
+  <%= @vote.result %>
+</p>
+
+
+<%= link_to 'Edit', edit_user_vote_path(current_user, @vote) %> |
+<%= link_to 'Back', user_votes_path %>

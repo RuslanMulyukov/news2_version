@@ -1,0 +1,5 @@
+<div class="comment">
+  commented by <strong><%= link_to(comment.user.login, user_path(comment.user)) %></strong>
+  at <strong><%= comment.created_at.strftime("%b'%e %Y %H:%M") %></strong><br />
+  <p><%= comment.description %></p>
+</div><br /><br />

@@ -1,0 +1,63 @@
+<h1>STEP 1: Define Category!</h1>
+
+<div>
+  <% if @categories.present? %>
+    <%= link_to("Select category from exist categories", "javascript: void(0);", :class => 'links select_category') %> |
+  <% end %>
+  <%= link_to("Create my category", "javascript: void(0);", :class => 'links new_category') %>
+</div><br />
+
+<div class="selected_category">
+  <%= form_tag new_user_article_path(current_user), :method => 'get' do %>
+    <%= select_tag :category_id, options_from_collection_for_select(Category.all, "id", "title") %><br /><br />
+    <%= submit_tag "Submit Category" %>
+  <% end %>
+</div>
+
+<div class="new_article">
+  <%= render 'form' %>
+</div>
+
+<script type="text/javascript">
+
+$(function() {
+
+  $('.new_article').hide();
+  $('.selected_category').hide();
+
+  $('.select_category').live("click", function(e) {
+    $('.new_article').hide(1000);
+    $('.selected_category').show(1000);
+  });
+
+  $('.new_category').live("click", function(e) {
+    $('.new_article').show();
+    $('.selected_category').hide(1000);
+  });
+
+});
+
+</script>
+
+<style type='text/css'>
+  .new_article {
+    margin-top: 20px;
+  }
+
+  #category_submit {
+    margin-top: 20px;
+  }
+
+  .field label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+
+  a.links {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 5px;
+  }
+</style>
+

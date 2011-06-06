@@ -1,0 +1,72 @@
+<script type="text/javascript">
+
+$(function() {
+  $('.comment_description').hide();
+
+  $('.submit_comment').click(function() {
+    var comment_block = $('.comment_description');
+    if(comment_block.css('display') == 'none'){
+      $('.comment_description').fadeIn(1000);
+    }else{
+      var article = $('.article_id').attr('id');
+      var comment = $('.comment_description #description').val();
+      $.post("<%= '/users/' + current_user.id.to_s + '/comments' %>", { user_id : "<%= current_user.id %>", article_id : article, description : comment } );
+      $('.comment_description').fadeOut(1000);
+    }
+  });
+});
+
+</script>
+
+<h3 class="article_id" id="<%= @article.id %>">New </h3>
+
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Category:</b>
+  <%= @article.category.title %>
+</p>
+
+<p>
+  <b>Title:</b>
+  <%= @article.title %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= raw(@article.description) %>
+</p>
+
+<p>
+  <b>Source:</b>
+  <%= @article.source %>
+</p>
+
+<h3><strong class="comments_counter"><%= @article.comments.count %></strong> Comments: </h3>
+
+<div class="new_comment">
+  <div class="comment_description">
+    <%= text_area_tag 'description', nil, :rows => 7, :cols => 100 %><br /><br />
+  </div>
+  <strong><%= link_to("Add comment", "javascript: void(0);", :class => 'submit_comment') %></strong>
+</div><br /><br />
+
+<div class="comments_list">
+  <% if @article.comments.present? %>
+    <% @article.comments.each do |comment| %>
+     <div class="comment">
+       commented by <strong><%= link_to(comment.user.login, user_path(comment.user)) %></strong>
+       at <strong><%= comment.created_at.strftime("%b'%e %Y %H:%M") %></strong><br />
+       <p><%= comment.description %></p>
+     </div><br /><br />
+    <% end %>
+  <% end %>
+</div>
+
+<% if @article.user == current_user %>
+  <%= link_to 'Edit', edit_user_article_path(current_user, @article) %> |
+  <%= link_to 'Back', home_index_path %>
+<% end %><br />
+
+<%= link_to 'Go back to all news', root_path %><br /><br />
+

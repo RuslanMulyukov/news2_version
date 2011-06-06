@@ -1,0 +1,10 @@
+<div class="article" id="<%= article.id %>">
+  <h2><%= link_to(article.title, user_article_path(article.user, article)) %></h2>
+  posted by <strong><%= link_to(article.user.login, user_path(article.user)) %></strong>
+  at <strong><%= article.created_at.strftime("%b'%e %Y %H:%M") %></strong><br />
+  <p><%= raw(truncate(article.description, :length => 550)) %></p>
+  <strong class="votes_for"><%= article.votes.for.count %></strong> <%= link_to("Vote on Article", "javascript: void(0);", :class => 'vote_on') %> |
+  <strong class="votes_against"><%= article.votes.against.count %></strong> <%= link_to("Vote against Article", "javascript: void(0);", :class => 'vote_against') %> |
+  <strong class="comments"><%= article.comments.count %></strong> <%= link_to("Comment on Article", user_article_path(article.user, article)) %><br /><br />
+</div>
+

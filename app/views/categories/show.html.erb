@@ -1,0 +1,10 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Title:</b>
+  <%= @category.title %>
+</p>
+
+
+<%= link_to 'Edit', edit_user_category_path(current_user, @category) %> |
+<%= link_to 'Back', user_categories_path %>

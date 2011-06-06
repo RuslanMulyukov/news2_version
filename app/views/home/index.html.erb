@@ -1,0 +1,95 @@
+<script type="text/javascript">
+
+$(function() {
+  $('.search_box').hide();
+
+  $('.search_article').live("click", function(e) {
+    $('.search_box').fadeIn(1000);
+  });
+
+  $('.max_on').live("click", function(e) {
+    $.get("<%= '/users/' + current_user.id.to_s + '/articles/sort' %>", { mode : 'max' });
+  });
+
+  $('.min_on').live("click", function(e) {
+    $.get("<%= '/users/' + current_user.id.to_s + '/articles/sort' %>", { mode : 'min' });
+  });
+
+  $('.date_on').live("click", function(e) {
+    $.get("<%= '/users/' + current_user.id.to_s + '/articles/sort' %>", { mode : 'date' });
+  });
+
+  $('.vote_on').live("click", function(e) {
+    var id = $(this).parents('.article').attr('id');
+    $.post("<%= 'users/' + current_user.id.to_s + '/votes' %>", { article_id : id, result : 'for' } );
+  });
+
+  $('.vote_against').live("click", function(e) {
+    var id = $(this).parents('.article').attr('id');
+    $.post("<%= 'users/' + current_user.id.to_s + '/votes' %>", { article_id : id, result : 'against' } );
+  });
+});
+
+</script>
+
+<h1><strong>News</strong></h1>
+
+<% if @articles.present? %>
+  <% if @articles.count >= 2 %>
+    <%= link_to("Get last news", "javascript: void(0);", :class => 'links date_on') %> |
+    <%= link_to("Sort by max rating", "javascript: void(0);", :class => 'links max_on') %> |
+    <%= link_to("Sort by min rating", "javascript: void(0);", :class => 'links min_on') %> |
+    <%= link_to 'Search Article', "javascript: void(0);", :class => 'links search_article' %> |
+  <% end %>
+<% else %>
+  <p class="opps">Opps! <br />
+     We have no news yet! Maybe, you first author? <br />
+     Write first news!</p>
+<% end %>
+<%= link_to 'Add News', new_user_category_path(current_user.id), :class => 'links' %>
+<br /><br />
+
+<div class="search_box">
+  <%= form_tag search_user_articles_path(current_user), :method => 'get' do %>
+    <%= label_tag :search_key_words %><br />
+    <%= text_field_tag :search_key %><br />
+   <br />
+    <%= submit_tag 'Search' %><br />
+  <% end %>
+</div>
+
+<% if @search_results.present? %>
+  <h3><strong>Search Results:</strong></h3>
+  <div style='border:1px dashed gray; padding:10px; margin:10px; '>
+    <%= render :partial => 'articles/article', :collection => @search_results %>
+  </div>
+<% end %>
+
+<%= paginate @articles %>
+<div style="clear:both"></div><br />
+
+<div class="articles_list">
+  <%= render @articles %>
+</div><br /><br/><br />
+
+<%= paginate @articles %>
+<div style="clear:both"></div><br/><br />
+
+<style type="text/css">
+   a.links {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 5px;
+  }
+
+  #article_search label {
+    font-size: 14px;
+    font-weight: bold
+  }
+
+  .opps {
+    font-size: 18px;
+    font-weight: bold
+  }
+</style>
+
